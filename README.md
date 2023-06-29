@@ -20,17 +20,24 @@ You are given an example of  an ESG reporting with Excel
 
 ### Reporting worksheet
 
-### ESG scoring
+![](resources/ESG_REPORT.PNG)
 
 ### Raw data worksheet
 
+![](resources/ESG_REPORT_RAW.PNG)
+
 ## Activity 2 - Streamlit presentation
 
-![](https://youtube.com/watch?v=LSBqpPQ9c-M&ab_channel=MediasFINAXYS)
+[![](resources/pierre_video.jpg)](https://youtube.com/watch?v=LSBqpPQ9c-M&ab_channel=MediasFINAXYS)
 
 ## Activity 3 - Streamlit hands-on
 
 ### Installation
+
+1. Connect to Gitpod with a Finaxys Account [Link to GitPod](https://gitpod.io/#https://github.com/Finaxys/data-day-2)
+2. Install streamlit : `pip install streamlit`
+3. Install other dependencies : `pip install pandas plotly openpyxl`
+4. Run streamlit example : `streamlit run esg_report.py` 
 
 ### Challenge 1 : Read Data from Excel spreadsheet, worksheet 'Raw'
 
