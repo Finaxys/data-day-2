@@ -57,8 +57,8 @@ if agent!='':
 
     st.markdown(agents_info.style.hide(axis="index").to_html(), unsafe_allow_html=True)
 
-    col1, col2 = st.columns(2)
-    with col1:
+    col_left, col_right = st.columns(2)
+    with col_left:
         st.subheader('TOP 3 ESG')
         
         st.markdown(return_top_3_esg(agent).style.hide(axis="index").to_html(), unsafe_allow_html=True)
@@ -93,6 +93,6 @@ if agent!='':
         #get total ratio
         st.write('TOTAL : ', ratio_sector['HOLDING_RATIO'].sum(), '%')
 
-    with col2:
+    with col_right:
         st.subheader('BOTTOM 3 ESG')
         st.markdown(return_bottom_3_esg(agent).style.hide(axis="index").to_html(), unsafe_allow_html=True)
