@@ -10,7 +10,7 @@ st.title('ESG Portfolio Analysis')
 # datas = pd.read_csv(r'ESG REPORT.csv', delimiter=';', decimal=',')
 
 datas = pd.read_excel(
-    io=r'ESG REPORT v1.0.xlsx',
+    io=r'../ESG REPORT v1.0.xlsx',
     engine='openpyxl',
     sheet_name='RAW'
 )
