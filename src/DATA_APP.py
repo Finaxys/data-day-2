@@ -10,18 +10,7 @@ esg_history_df = pd.read_excel(
     engine='openpyxl',
     sheet_name='RAW'
 )
-
-esg_history_df_gold = pd.read_csv('../cache/SILVER_ESG_ANA.csv', index_col=False)
-#esg_history_df = pd.read_csv('../cache/SILVER_ESG.csv', index_col=False)
-agents_names = list(set(esg_history_df['AGENTNAME'].values))
-agents_names.insert(0, '')
-
-
-
-price_history_df = pd.read_csv('../cache/SILVER_PRICE_ANA.csv')
-company_names = list(set(price_history_df['NAME'].values))
-company_names.append('')
-
+agents_names = esg_history_df['AGENTNAME'].unique()
 
 
 def return_top_3_esg(agent_name):
@@ -31,7 +20,7 @@ def return_top_3_esg(agent_name):
     data_instrument['ESG'] = data_instrument['ESG'].astype(str).str.replace('.0', '', regex=False)
     data_instrument = data_instrument.reset_index()
 
-    return data_instrument.tail(3)
+    return data_instrument.head(3)
 
 
 def return_bottom_3_esg(agent_name):
@@ -40,7 +29,7 @@ def return_bottom_3_esg(agent_name):
     data_instrument['ESG'] = data_instrument['ESG'].astype(str).str.replace('.0', '', regex=False)
     data_instrument = data_instrument.reset_index()
 
-    return data_instrument.head(3)
+    return data_instrument.tail(3)
 
 
 
@@ -107,4 +96,3 @@ if agent!='':
     with col2:
         st.subheader('BOTTOM 3 ESG')
         st.markdown(return_bottom_3_esg(agent).style.hide(axis="index").to_html(), unsafe_allow_html=True)
-
