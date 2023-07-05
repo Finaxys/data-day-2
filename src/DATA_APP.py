@@ -4,8 +4,15 @@ import matplotlib as plt
 import matplotlib.pyplot as plt
 import numpy as np
 
+
+esg_history_df = pd.read_excel(
+    io=r'../ESG REPORT v1.0.xlsx',
+    engine='openpyxl',
+    sheet_name='RAW'
+)
+
 esg_history_df_gold = pd.read_csv('../cache/SILVER_ESG_ANA.csv', index_col=False)
-esg_history_df = pd.read_csv('../cache/SILVER_ESG.csv', index_col=False)
+#esg_history_df = pd.read_csv('../cache/SILVER_ESG.csv', index_col=False)
 agents_names = list(set(esg_history_df['AGENTNAME'].values))
 agents_names.insert(0, '')
 
@@ -86,24 +93,22 @@ def get_x_y_entity(val, time_val):
 
 def return_top_3_esg(agent_name):
     
-    agent_filter = price_history_df[price_history_df.EXTID1.str.startswith(agent_name)].filter(['NAME', 'ESG'])
-    top_3 = agent_filter.drop_duplicates(keep='first').head(3)
-    top_3.columns = ['INSTRUMENT', 'SCORE ESG']
-    #convert into string to delete 0s
-    top_3['SCORE ESG'] = top_3['SCORE ESG'].astype(str).str.replace('.0', '', regex=False)
-    
-    return top_3.sort_values(by = 'SCORE ESG', ascending=False)
+    data_agent = esg_history_df.loc[esg_history_df['AGENTNAME'] == agent_name]
+    data_instrument = data_agent.filter(['INSTRUMENT_NAME', 'ESG']).groupby('INSTRUMENT_NAME').mean().sort_values('ESG', ascending=False)
+    data_instrument['ESG'] = data_instrument['ESG'].astype(str).str.replace('.0', '', regex=False)
+    data_instrument = data_instrument.reset_index()
+
+    return data_instrument.tail(3)
 
 
 def return_bottom_3_esg(agent_name):
+    data_agent = esg_history_df.loc[esg_history_df['AGENTNAME'] == agent_name]
+    data_instrument = data_agent.filter(['INSTRUMENT_NAME', 'ESG']).groupby('INSTRUMENT_NAME').mean().sort_values('ESG', ascending=False)
+    data_instrument['ESG'] = data_instrument['ESG'].astype(str).str.replace('.0', '', regex=False)
+    data_instrument = data_instrument.reset_index()
 
-    agent_filter = price_history_df[price_history_df.EXTID1.str.startswith(agent_name)].filter(['NAME', 'ESG'])
-    top_3 = agent_filter.drop_duplicates(keep='first').head(3)
-    top_3.columns = ['INSTRUMENT', 'SCORE ESG']
-    #convert into string to delete 0s
-    top_3['SCORE ESG'] = top_3['SCORE ESG'].astype(str).str.replace('.0', '', regex=False)
+    return data_instrument.head(3)
 
-    return top_3.sort_values(by = 'SCORE ESG', ascending=True)
 
 
 
@@ -116,7 +121,9 @@ agent = st.sidebar.selectbox(
 )
 
 if agent!='':
-    agents_info = esg_history_df[esg_history_df['AGENTNAME'] == agent]
+    data_agent = esg_history_df.loc[esg_history_df['AGENTNAME'] == agent]
+    agents_info = data_agent.filter(['AGENTNAME', 'ESG', 'E', 'S', 'G', 'HOLDING']).groupby('AGENTNAME').mean()
+    agents_info = agents_info.reset_index()
     agents_info = agents_info.drop(columns = ['AGENTNAME'])
     agents_info = agents_info[['ESG', 'E', 'S', 'G', 'HOLDING']]
     agents_info.columns = ['ESG Score', 'Environment Score', 'Social Score', 'Governance Score', 'HOLDING']
@@ -137,15 +144,13 @@ if agent!='':
         #compute the holding ratio per each sector using groupby function
         st.subheader('Sector Allocation')
 
-        esg_history_df_gold= esg_history_df_gold.loc[esg_history_df_gold['AGENTNAME'] == agent]
-        ratio_sector = esg_history_df_gold.groupby(by=['SECTOR_LONGNAME']).sum()
+        data_sector = data_agent.filter(['SECTOR_LONGNAME', 'HOLDING_RATIO']).groupby('SECTOR_LONGNAME').sum()
+        data_sector['HOLDING_RATIO'] = data_sector['HOLDING_RATIO'].round(2)*100
         
-        ratio_sector['HOLDING_RATIO'] = ratio_sector['HOLDING_RATIO'].round(2)*100
+        ratio_sector = data_sector.reset_index()
+        
         
         ratio_sector['HOLDING_RATIO'] = ratio_sector['HOLDING_RATIO'].astype('int')
-        #remove SECTOR_LONGNAME as index
-        ratio_sector = ratio_sector.reset_index()
-        
 
         #print the progress bar with holding ratio
         st.data_editor(
@@ -171,54 +176,3 @@ if agent!='':
         st.subheader('BOTTOM 3 ESG')
         st.markdown(return_bottom_3_esg(agent).style.hide(axis="index").to_html(), unsafe_allow_html=True)
 
-
-
-#get graph based on ISIN code
-st.title('Price evolution based on code ISIN')
-
-col_isin1, col_isin2 = st.columns(2)
-with col_isin1:
-
-    isin=st.text_input('ISIN code')
-
-with col_isin2:
-    time_val = st.radio(
-    "Change timestamps values",
-    ('10', '20', '30'),horizontal=True, key='10')
-
-if isin !='':
-    if isin in price_history_df['OBNAME'].values:
-
-        xpoints, ypoints, df = get_x_y_isin(isin, time_val)
-        st.line_chart(df)
-        
-        with col_isin1:
-            st.write('Max Price', round(max(ypoints), 2))
-            st.write('Min Price', round(min(ypoints), 2))
-            
-    else : 
-        st.warning('ISIN code not found !')
-
-
-
-#get graph based on entity name
-st.title('Price evolution based on Entity Name')
-
-col_ent1, col_ent2 = st.columns(2)
-with col_ent1:
-    entity = st.selectbox('Choose entity name', sorted(company_names), key = 2)
-
-with col_ent2:
-    time_val = st.radio(
-    "Change timestamps values",
-    ('10', '20', '30'), horizontal=True, key='20') 
-
-
-if entity !='':
-    xpoints, ypoints, df = get_x_y_entity(entity, time_val) 
-    #plot(xpoints, ypoints)
-    
-    st.line_chart(df)
-    with col_ent1:
-        st.write('Max Price', round(max(ypoints), 2))
-        st.write('Min Price', round(min(ypoints), 2))
