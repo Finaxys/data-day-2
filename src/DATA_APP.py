@@ -37,7 +37,7 @@ st.title('ESG PORTFOLIO ANALYSIS')
 # Side bar for agent names
 
 agent = st.sidebar.selectbox(
-    "Select agent name",
+    "Select agent name : ",
     (agents_names)
 )
 

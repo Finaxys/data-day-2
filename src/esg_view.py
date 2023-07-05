@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from Display import display_data
 
 st.set_page_config(page_title='ESG Portfolio',
                    page_icon=':bar_chart:',
@@ -30,9 +31,12 @@ left_column, center_column, right_column = st.columns(3)
 
 with left_column:
     data_sector = data_agent.filter(['SECTOR_LONGNAME', 'HOLDING_RATIO']).groupby('SECTOR_LONGNAME').sum()
-    data_sector['HOLDING_RATIO'] = data_sector['HOLDING_RATIO']*100
+    data_sector['HOLDING_RATIO'] = data_sector['HOLDING_RATIO'].round(1)*100
     st.subheader('Sector Allocation')
-    st.write(data_sector)
+    data_sector = data_sector.reset_index()
+    #st.write(data_sector)
+    display_data(data_sector[['SECTOR_LONGNAME','HOLDING_RATIO']])
+    
 
 data_instrument = data_agent.filter(['INSTRUMENT_NAME', 'ESG']).groupby('INSTRUMENT_NAME').mean().sort_values('ESG', ascending=False)
 
@@ -46,7 +50,3 @@ with right_column:
 
 st.subheader('Raw data')
 st.write(datas)
-
-
-
-
