@@ -21,7 +21,6 @@ final_df = final_df.groupby('TIMESTAMP', as_index=False, sort=False)['PRICE'].me
 final_df = final_df.sort_values('TIMESTAMP')
 final_df = final_df.set_index('TIMESTAMP')
 final_df = final_df.resample('ms').ffill()
-# values = final_df.resample(time_val+'T').aggregate()
 final_df = final_df.resample('30T').mean()
 
 final_df = final_df.between_time('07:00:00', '15:00:00')
@@ -30,12 +29,7 @@ final_df = final_df.reset_index()
 final_df['TIMESTAMP'] = final_df['TIMESTAMP'].astype(str)
 final_df = final_df.set_index('TIMESTAMP')
 
-xpoints = list(final_df.index)
-
-ypoints = list(final_df['PRICE'].values)
-
-
-plt.plot(xpoints, ypoints)
+plt.plot(final_df)
 plt.title('Price evolution')
 plt.xlabel('TIMESTAMP')
 plt.ylabel('PRICE')

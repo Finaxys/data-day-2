@@ -15,21 +15,25 @@ datas = pd.read_excel(
     sheet_name='RAW'
 )
 
-# List of uniques agent names
-agents = datas['AGENTNAME'].unique()
+#st.subheader('Raw data')
+#st.write(datas)
 
-option = st.sidebar.selectbox('Select agent : ', agents)
+# TODO : Use the selected agent name to filter data
+# List of uniques agent names
+#agents = datas['AGENTNAME'].unique()
+#agent_name = st.sidebar.selectbox('Select agent : ', agents)
+
+agent_name ='am-fund5-esg-top_20_fr_s-02'
+st.subheader('Fund Name : ' + agent_name)
 
 # Retrieved the data based on the agent name selected
-# TODO : Use the selected agent name to filter data
-data_agent = datas.loc[datas['AGENTNAME'] == option]
+data_agent = datas.loc[datas['AGENTNAME'] == agent_name]
 
 # Grouping by agent name, only display some columns and processing their mean value
 data_esg = data_agent.filter(['AGENTNAME', 'ESG', 'E', 'S', 'G']).groupby('AGENTNAME').mean()
 
 # TODO : Write data_esg dataframe with streamlit with a title named 'ESG Scoring'
-st.subheader('ESG Scoring')
-st.write(data_esg)
+# HERE
 
 # Split the screen in 3 columns
 left_column, center_column, right_column = st.columns(3)
@@ -55,7 +59,6 @@ with center_column:
 with right_column:
     st.subheader('Bottom 3 ESG')
     # TODO : Based on the Top 3 ESG, display bottom 3 ESG instruments sorted by ESG score
-    st.write(data_instrument.tail(3))
+    # HERE
 
-st.subheader('Raw data')
-st.write(datas)
+
