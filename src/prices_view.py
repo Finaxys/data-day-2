@@ -19,8 +19,8 @@ final_df['TIMESTAMP'] = pd.to_datetime(final_df['TIMESTAMP'] / 1000, unit='ms').
 final_df = final_df.groupby('TIMESTAMP', as_index=False, sort=False)['PRICE'].mean()
 
 final_df = final_df.sort_values('TIMESTAMP')
+final_df['TIMESTAMP'] = pd.to_datetime(final_df['TIMESTAMP'], unit='ms').ffill()
 final_df = final_df.set_index('TIMESTAMP')
-final_df = final_df.resample('ms').ffill()
 final_df = final_df.resample('30T').mean()
 
 final_df = final_df.between_time('07:00:00', '15:00:00')
