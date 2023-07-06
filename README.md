@@ -36,23 +36,19 @@ You are given an example of  an ESG reporting with Excel
 
 1. Connect to Gitpod with a Finaxys Account [Link to GitPod](https://gitpod.io/#https://github.com/Finaxys/data-day-2)
 2. Install streamlit : `pip install streamlit`
-3. Install other dependencies : `pip install pandas plotly openpyxl`
-4. Run streamlit example : `streamlit run src/esg_view.py` 
+3. Run streamlit example : `streamlit run src/esg_view.py`
+4. Accept the dialog box and 'Open in browser'
 
-### Challenge 1 : Read Data from Excel spreadsheet, worksheet 'Raw'
+### Challenge 1 : Complete the streamlit application with TODO information
 
-### Challenge 2 : Display data from 'Raw' worksheet
+Complete the streamlit application with information given inside the code
 
-### Challenge 3 : Filter data based on agent name
+### Challenge 2 : Data Science with jupyter Notebook
 
-### Challenge 4 : Display ESG score
+1. Install jupyter notebook : `pip install notebook`
+2. Run jupyter with the configuration file : `jupyter notebook --NotebookApp.allow_remote_access=True --ip='*' --NotebookApp.token='' --NotebookApp.password=''`
 
-### Challenge 5 : Display filters on a sidebar
+### Challenge 3 : Run the same application with streamlit
 
-### Challenge 6 : Add a pie chart to display sector allocation
-
-## Activity 4 : Intraday price evolution
-
-## Activity 5 : Snowflake & Modern Data Stack presentation
-
-## Activity 6 : Snowflake integration
+1. Run streamlit example : `streamlit run src/prices_view.py`
+2. Accept the dialog box and 'Open in browser'
